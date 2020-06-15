@@ -5,10 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Digital_Clock"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        FontFamily="/Resources/#Digital Numbers"
+        Title="Tech-Clock" Height="450" Width="800" ResizeMode="NoResize">
     <Grid Background="#FF3C3C3C">
         <Canvas x:Name="Body" HorizontalAlignment="Left" Height="420" VerticalAlignment="Top" Width="794" Margin="0,0,-0.4,0">
-            <Label x:Name="Clock_Index_lbl" Content="" Background="{x:Null}" Foreground="White" FontSize="24" FontWeight="Bold" Width="794" Height="420" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <Canvas x:Name="Home_Panel" Height="420" Width="794" d:IsHidden="True">
+                <Label x:Name="Clock_Index_lbl" Background="{x:Null}" Foreground="White" FontSize="48" FontWeight="Bold" Width="794" Height="410" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                <Image x:Name="StopWatch_img" Height="100" Canvas.Left="295" Canvas.Top="270" Width="100" Source="Resources/black-stopwatch.png" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" Tag="StopWatch" />
+                <Image x:Name="CountDown_img" Height="100" Canvas.Left="438" Canvas.Top="270" Width="100" Source="Resources/countdown.png" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" Tag="CountDown" />
+            </Canvas>
+            <Canvas x:Name="StopWatch_Panel" Height="420" Width="794">
+                <Label x:Name="StopWatch_Index_lbl" Background="{x:Null}" Foreground="White" FontSize="48" FontWeight="Bold" Width="794" Height="420" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="00:00:00" />
+                <Image x:Name="Close_img" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" Tag="Home" />
+                <Image x:Name="Start_StopWatch_img" Height="108" Canvas.Left="286" Canvas.Top="263" Width="108" Source="Resources/play-button.png" MouseLeftButtonUp="Start_StopWatch_img_MouseLeftButtonUp" Tag="Start" />
+                <Image x:Name="Reset_StopWatch_img" Height="108" Canvas.Left="423" Canvas.Top="263" Width="108" Source="Resources/stop-button.png" Tag="Start" MouseLeftButtonUp="Reset_StopWatch_img_MouseLeftButtonUp" />
+            </Canvas>
+            <Canvas x:Name="CountDown_Panel" Height="420" Width="794">
+                <TextBox x:Name="CountDown_Index_txt" Height="71" TextWrapping="Wrap" Text="00:00:00" Width="319" Canvas.Left="248" Canvas.Top="168" FontSize="48" Foreground="White" Background="{x:Null}" BorderBrush="White" SelectionBrush="{x:Null}" BorderThickness="0,0,0,2" />
+                <Image x:Name="Close_img1" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Home" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" />
+                <Image x:Name="Start_CountDown_img" Height="108" Canvas.Left="286" Canvas.Top="263" Width="108" Source="Resources/play-button.png" MouseLeftButtonUp="Start_StopWatch_img_MouseLeftButtonUp" Tag="Start" />
+                <Image x:Name="Reset_CountDown_img" Height="108" Canvas.Left="423" Canvas.Top="263" Width="108" Source="Resources/stop-button.png" Tag="Start" MouseLeftButtonUp="Reset_CountDown_img_MouseLeftButtonUp" />
+            </Canvas>
         </Canvas>
     </Grid>
 </Window>
