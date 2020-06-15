@@ -1,0 +1,14 @@
+﻿<Window x:Class="Digital_Clock.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Digital_Clock"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid Background="#FF3C3C3C">
+        <Canvas x:Name="Body" HorizontalAlignment="Left" Height="420" VerticalAlignment="Top" Width="794" Margin="0,0,-0.4,0">
+            <Label x:Name="Clock_Index_lbl" Content="" Background="{x:Null}" Foreground="White" FontSize="24" FontWeight="Bold" Width="794" Height="420" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        </Canvas>
+    </Grid>
+</Window>
