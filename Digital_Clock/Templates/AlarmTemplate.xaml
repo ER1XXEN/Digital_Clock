@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Digital_Clock.Templates.AlarmTemplate"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" d:DesignWidth="800" Height="82.4" Width="450">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ImageChecked" TargetType="Image">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Activated}" Value="True">
+                        <Setter Property="Source" Value="/Digital_Clock;component/Resources/bell-selected.png" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Activated}" Value="False">
+                        <Setter Property="Source" Value="/Digital_Clock;component/Resources/bell.png" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <!--<Style TargetType="{x:Type Label}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding MyListViewBinding}"
+                    Value="True">
+                        <Setter Property="Button.Background" Value="Red" />
+                        DataTrigger>
+                </Style.Triggers>
+            </Style>-->
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid x:Name="Body" Margin="0,0,-0.4,0.4">
+        <Image x:Name="Bell_Img" HorizontalAlignment="Left" Margin="10,10,0,10"  Style="{StaticResource ImageChecked}" Width="49" MouseLeftButtonUp="Bell_Img_MouseLeftButtonUp" />
+        <Label x:Name="Alarm_Time_lbl" Content="{Binding _AlarmTime}" HorizontalAlignment="Left" Margin="96,0,-0.4,0" Width="354" FontSize="36" FontWeight="Bold" Foreground="White" Height="45" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" Padding="0" />
+        <Label Content="Sun" HorizontalAlignment="Left" Margin="96,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Sunday" Visibility="Hidden" />
+        <Label Content="Mon" HorizontalAlignment="Left" Margin="142,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Monday" Visibility="Hidden" />
+        <Label Content="Tue" HorizontalAlignment="Left" Margin="187,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Tuesday" Visibility="Hidden" />
+        <Label Content="Wed" HorizontalAlignment="Left" Margin="234,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Wednesday" Visibility="Hidden" />
+        <Label Content="Thu" HorizontalAlignment="Left" Margin="282,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Thursday" Visibility="Hidden" />
+        <Label Content="Fri" HorizontalAlignment="Left" Margin="330,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Friday" Visibility="Hidden" />
+        <Label Content="Sat" HorizontalAlignment="Left" Margin="375,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Saturday" Visibility="Hidden" />
+    </Grid>
+</UserControl>

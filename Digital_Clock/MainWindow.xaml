@@ -1,31 +1,47 @@
-﻿
-<Window x:Class="Digital_Clock.MainWindow"
+﻿<Window x:Class="Digital_Clock.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Digital_Clock"
+        xmlns:Templates="clr-namespace:Digital_Clock.Templates"
         mc:Ignorable="d"
         FontFamily="/Resources/#Digital Numbers"
         Title="Tech-Clock" Height="450" Width="800" ResizeMode="CanMinimize">
     <Grid Background="#FF3C3C3C">
         <Canvas x:Name="Body" HorizontalAlignment="Left" Height="420" VerticalAlignment="Top" Width="794" Margin="0,0,-0.4,0">
             <Canvas x:Name="Home_Panel" Height="420" Width="794" d:IsHidden="True">
-                <Label x:Name="Clock_Index_lbl" Background="{x:Null}" Foreground="White" FontSize="48" FontWeight="Bold" Width="794" Height="410" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                <Image x:Name="StopWatch_img" Height="100" Canvas.Left="295" Canvas.Top="270" Width="100" Source="Resources/black-stopwatch.png" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" Tag="StopWatch" />
-                <Image x:Name="CountDown_img" Height="84" Canvas.Left="438" Canvas.Top="286" Width="84" Source="Resources/countdown.png" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" Tag="CountDown" />
+                <Label x:Name="Clock_Index_lbl" Background="{x:Null}" Foreground="White" FontSize="48" FontWeight="Bold" Width="794" Height="420" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                <Image x:Name="StopWatch_img" Height="100" Canvas.Left="466" Canvas.Top="270" Width="100" Source="Resources/black-stopwatch.png" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" Tag="StopWatch" />
+                <Image x:Name="CountDown_img" Height="87" Canvas.Left="352" Canvas.Top="283" Width="88" Source="Resources/countdown.png" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" Tag="CountDown" />
+                <Image x:Name="CountDown_img_Copy" Height="100" Canvas.Left="226" Canvas.Top="270" Width="100" Source="Resources/alarm-clock.png" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" Tag="Alarm" />
             </Canvas>
             <Canvas x:Name="StopWatch_Panel" Height="420" Width="794" d:IsHidden="True">
                 <Label x:Name="StopWatch_Index_lbl" Background="{x:Null}" Foreground="White" FontSize="48" FontWeight="Bold" Width="794" Height="420" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="00:00:00" />
-                <Image x:Name="Close_img" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" Tag="Home" />
+                <Image x:Name="StopWatchClose_img" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" Tag="Home" />
                 <Image x:Name="Start_StopWatch_img" Height="108" Canvas.Left="286" Canvas.Top="263" Width="108" Source="Resources/play-button.png" MouseLeftButtonUp="Start_StopWatch_img_MouseLeftButtonUp" Tag="Start" />
                 <Image x:Name="Reset_StopWatch_img" Height="108" Canvas.Left="423" Canvas.Top="263" Width="108" Source="Resources/stop-button.png" Tag="Start" MouseLeftButtonUp="Reset_StopWatch_img_MouseLeftButtonUp" />
             </Canvas>
-            <Canvas x:Name="CountDown_Panel" Height="420" Width="794" Focusable="True">
+            <Canvas x:Name="CountDown_Panel" Height="420" Width="794" Focusable="True" d:IsHidden="True">
                 <TextBox x:Name="CountDown_Index_txt" Height="71" TextWrapping="Wrap" Text="00:00:00" Width="319" Canvas.Left="242" Canvas.Top="179" FontSize="48" Foreground="White" Background="{x:Null}" BorderBrush="White" SelectionBrush="{x:Null}" BorderThickness="0,0,0,2" LostKeyboardFocus="CountDown_Index_txt_LostKeyboardFocus" GotKeyboardFocus="CountDown_Index_txt_GotFocus" />
-                <Image x:Name="Close_img1" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Home" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" />
+                <Image x:Name="CountDownClose_img" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Home" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" />
                 <Image x:Name="Start_CountDown_img" Height="108" Canvas.Left="286" Canvas.Top="263" Width="108" Source="Resources/play-button.png" MouseLeftButtonUp="Start_CountDown_img_MouseLeftButtonUp" Tag="Start" />
                 <Image x:Name="Reset_CountDown_img" Height="108" Canvas.Left="423" Canvas.Top="263" Width="108" Source="Resources/stop-button.png" Tag="Start" MouseLeftButtonUp="Reset_CountDown_img_MouseLeftButtonUp" />
+            </Canvas>
+            <Canvas x:Name="Alarm_Panel" Height="420" Width="794" Focusable="True" d:IsHidden="True">
+                <Image x:Name="AlarmClose_img" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Home" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" />
+                <ListBox x:Name="Alarm_Listbox" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="316" Canvas.Left="87" Canvas.Top="94" Width="660" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Templates:AlarmTemplate />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Image x:Name="AlarmAdd_img" Height="62" Canvas.Left="670" Canvas.Top="49" Width="63" Source="Resources/plus-button.png" Tag="AddAlarm" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" />
+            </Canvas>
+            <Canvas x:Name="AddAlarm_Panel" Height="420" Width="794" Focusable="True">
+                <Image x:Name="AddAlarmClose_img" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Alarm" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" />
+                <TextBox x:Name="CountDown_Index_txt_Copy" Height="71" TextWrapping="Wrap" Text="00:00:00" Width="319" Canvas.Left="236" Canvas.Top="85" FontSize="48" Foreground="White" Background="{x:Null}" BorderBrush="White" SelectionBrush="{x:Null}" BorderThickness="0,0,0,2" LostKeyboardFocus="CountDown_Index_txt_LostKeyboardFocus" GotKeyboardFocus="CountDown_Index_txt_GotFocus" />
+                <Label Content="Time" Canvas.Left="236" Canvas.Top="39" Height="35" Width="73" FontSize="20" Foreground="White" />
             </Canvas>
         </Canvas>
     </Grid>

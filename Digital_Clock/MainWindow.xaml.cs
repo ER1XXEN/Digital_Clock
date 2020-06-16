@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Digital_Clock.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -28,11 +29,15 @@ namespace Digital_Clock
     public partial class MainWindow : Window
     {
         #region Variables
+
+        private List<Alarm> Alarms = new List<Alarm>();
+
         private DispatcherTimer TimerClock = new DispatcherTimer();
         private DispatcherTimer TimerStopWatch = new DispatcherTimer();
         private DispatcherTimer TimerCountDown = new DispatcherTimer();
         private DispatcherTimer CountDownClock = new DispatcherTimer();
         private Stopwatch stopWatch = new Stopwatch();
+
         private Notifier notifier = new Notifier(cfg =>
         {
             cfg.PositionProvider = new WindowPositionProvider(
@@ -47,9 +52,10 @@ namespace Digital_Clock
 
             cfg.Dispatcher = Application.Current.Dispatcher;
         });
-        private int TimeLeft = 0;
-        #endregion
 
+        private int TimeLeft = 0;
+
+        #endregion Variables
 
         /// <summary>
         /// Initialize MainWindow
@@ -79,7 +85,15 @@ namespace Digital_Clock
             TimerCountDown.Tick += new EventHandler(CountDownTimer);
             TimerCountDown.Interval = new TimeSpan(0, 0, 1);
 
-            Change_Panel("CountDown");
+            Alarm TestAlarm = new Alarm();
+            TestAlarm.Activated = false;
+            TestAlarm.AlarmTime = DateTime.Now.AddMinutes(1);
+            TestAlarm.DaysToRepeat.Add(NumToEnum<WeekDays>((int)DateTime.Now.DayOfWeek));
+            Alarms.Add(TestAlarm);
+            Alarms.Add(new Alarm());
+            Alarm_Listbox.ItemsSource = Alarms;
+
+            Change_Panel("AddAlarm");
         }
 
         /// <summary>
@@ -90,7 +104,7 @@ namespace Digital_Clock
         {
             foreach (Canvas item in FindWindowChildren<Canvas>(Body))
             {
-                if (item.Name.Split('_')[0].Contains(Panel))
+                if (item.Name.Split('_')[0] == Panel)
                     item.Visibility = Visibility.Visible;
                 else
                     item.Visibility = Visibility.Hidden;
@@ -100,19 +114,41 @@ namespace Digital_Clock
         #endregion Custom_Methods
 
         #region Control_Methods
+
         #region Interval_Methods
+
         /// <summary>
         /// Set Time for clock
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Timer_Click(object sender, EventArgs e) => Clock_Index_lbl.Content = string.Format("{0:HH:mm:ss}", DateTime.Now);
+        private void Timer_Click(object sender, EventArgs e)
+        {
+            Clock_Index_lbl.Content = string.Format("{0:HH:mm:ss}", DateTime.Now);
+            if (Alarms.Any(x => !x.Triggerd && x.AlarmTime.TimeOfDay.Hours == DateTime.Now.TimeOfDay.Hours && x.AlarmTime.TimeOfDay.Minutes == DateTime.Now.TimeOfDay.Minutes && x.Activated /*&& x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)*/))
+            {
+                Alarm alarm = Alarms.FirstOrDefault(x => !x.Triggerd && x.AlarmTime.TimeOfDay.Hours == DateTime.Now.TimeOfDay.Hours && x.AlarmTime.TimeOfDay.Minutes == DateTime.Now.TimeOfDay.Minutes && x.Activated /*&& x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)*/);
+                alarm.Triggerd = true;
+                notifier.ShowInformation(alarm.Content);
+
+                Change_Panel("Alarm");
+
+                //Brings window to front
+                if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
+                Activate();
+                Topmost = true;  // important
+                Topmost = false; // important
+                Focus();
+            }
+        }
+
         /// <summary>
         /// Updates value for stopwatch
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void StopWatchTimer(object sender, EventArgs e) => StopWatch_Index_lbl.Content = string.Format("{0:00}:{1:00}:{2:00}", stopWatch.Elapsed.Hours, stopWatch.Elapsed.Minutes, stopWatch.Elapsed.Seconds);
+
         /// <summary>
         /// Updates value for countdown
         /// </summary>
@@ -124,16 +160,23 @@ namespace Digital_Clock
             TimeSpan t = TimeSpan.FromSeconds(TimeLeft);
             CountDown_Index_txt.Text = string.Format("{0:00}:{1:00}:{2:00}", t.Hours, t.Minutes, t.Seconds);
         }
+
         //Countdown is done
         private void CountDownDone(object sender, EventArgs e)
         {
+            CountDownClock.Stop();
+            TimerCountDown.Stop();
+            if (CountDownClock.Interval == new TimeSpan())
+            {
+                Start_CountDown_img.Source = new BitmapImage(new Uri(@"Resources\play-button.png", UriKind.Relative));
+                return;
+            }
+
             TimeLeft = TimeLeft - 1;
             TimeSpan t = TimeSpan.FromSeconds(TimeLeft);
             CountDown_Index_txt.Text = string.Format("{0:00}:{1:00}:{2:00}", t.Hours, t.Minutes, t.Seconds);
 
             SystemSounds.Exclamation.Play();
-            CountDownClock.Stop();
-            TimerCountDown.Stop();
 
             //Brings window to front
             if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
@@ -145,13 +188,16 @@ namespace Digital_Clock
             //Shows notification
             notifier.ShowInformation("Time's Up");
         }
-        #endregion
+
+        #endregion Interval_Methods
+
         /// <summary>
         /// Change panel according to tag of image
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Menu_img_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) => Change_Panel(((Image)sender).Tag.ToString());
+
         /// <summary>
         /// Start StopWatch
         /// </summary>
@@ -175,6 +221,7 @@ namespace Digital_Clock
                 TimerStopWatch.Stop();
             }
         }
+
         /// <summary>
         /// Reset StopWatch
         /// </summary>
@@ -188,6 +235,7 @@ namespace Digital_Clock
             TimerStopWatch.Stop();
             StopWatch_Index_lbl.Content = string.Format("{0:00}:{1:00}:{2:00}", stopWatch.Elapsed.Hours, stopWatch.Elapsed.Minutes, stopWatch.Elapsed.Seconds);
         }
+
         /// <summary>
         /// Reset Countdown
         /// </summary>
@@ -200,6 +248,7 @@ namespace Digital_Clock
             TimerCountDown.Stop();
             CountDown_Index_txt.Text = "00:00:00";
         }
+
         /// <summary>
         /// Set Countdown time
         /// </summary>
@@ -208,16 +257,25 @@ namespace Digital_Clock
         private void CountDown_Index_txt_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (CountDown_Index_txt.Text.Length != 8)
+            {
                 CountDown_Index_txt.Text = "00:00:00";
+                notifier.ShowError("Something went wrong");
+                return;
+            }
             string[] test = CountDown_Index_txt.Text.Split(':');
             if (test.Count() == 3 && !test.Any(x => x.Length != 2) && !test.Any(x => x.Any(ch => ch < '0' || ch > '9')))
             {
                 CountDownClock.Interval = new TimeSpan(Convert.ToInt32(test[0]), Convert.ToInt32(test[1]), Convert.ToInt32(test[2]));
                 TimeLeft = (int)CountDownClock.Interval.TotalSeconds;
+                notifier.ShowSuccess("Time set");
             }
             else
+            {
                 CountDown_Index_txt.Text = "00:00:00";
+                notifier.ShowError("Something went wrong");
+            }
         }
+
         /// <summary>
         /// Begins CountDown from inserted time
         /// </summary>
@@ -242,6 +300,7 @@ namespace Digital_Clock
                 TimerCountDown.Stop();
             }
         }
+
         /// <summary>
         /// Pause CountDown
         /// to allow editing of value
@@ -254,6 +313,7 @@ namespace Digital_Clock
             Start_CountDown_img.Source = new BitmapImage(new Uri(@"Resources\play-button.png", UriKind.Relative));
             TimerCountDown.Stop();
         }
+
         #endregion Control_Methods
 
         #region Helper_Methods
@@ -284,6 +344,18 @@ namespace Digital_Clock
             }
         }
 
+        public T NumToEnum<T>(int number)
+        {
+            return (T)Enum.ToObject(typeof(T), number);
+        }
+
         #endregion Helper_Methods
+
+        public void ToggleAlarm()
+        {
+            Alarm alarm = (Alarm)Alarm_Listbox.SelectedItem;
+            alarm.Activated = !alarm.Activated;
+            Alarm_Listbox.Items.Refresh();
+        }
     }
 }
