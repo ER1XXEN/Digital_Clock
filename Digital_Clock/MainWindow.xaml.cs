@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Media;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -87,13 +88,13 @@ namespace Digital_Clock
 
             Alarm TestAlarm = new Alarm();
             TestAlarm.Activated = false;
-            TestAlarm.AlarmTime = DateTime.Now.AddMinutes(1);
+            TestAlarm.AlarmTime = TestAlarm.AlarmTime.Add(new TimeSpan(0, 1, 0));
             TestAlarm.DaysToRepeat.Add(NumToEnum<WeekDays>((int)DateTime.Now.DayOfWeek));
             Alarms.Add(TestAlarm);
             Alarms.Add(new Alarm());
             Alarm_Listbox.ItemsSource = Alarms;
 
-            Change_Panel("AddAlarm");
+            Change_Panel("ActiveAlarm");
         }
 
         /// <summary>
@@ -125,13 +126,12 @@ namespace Digital_Clock
         private void Timer_Click(object sender, EventArgs e)
         {
             Clock_Index_lbl.Content = string.Format("{0:HH:mm:ss}", DateTime.Now);
-            if (Alarms.Any(x => !x.Triggerd && x.AlarmTime.TimeOfDay.Hours == DateTime.Now.TimeOfDay.Hours && x.AlarmTime.TimeOfDay.Minutes == DateTime.Now.TimeOfDay.Minutes && x.Activated /*&& x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)*/))
+            if (Alarms.Any(x => x.AlarmTime.TotalSeconds == Math.Floor(DateTime.Now.TimeOfDay.TotalSeconds) && x.Activated /*&& x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)*/))
             {
-                Alarm alarm = Alarms.FirstOrDefault(x => !x.Triggerd && x.AlarmTime.TimeOfDay.Hours == DateTime.Now.TimeOfDay.Hours && x.AlarmTime.TimeOfDay.Minutes == DateTime.Now.TimeOfDay.Minutes && x.Activated /*&& x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)*/);
-                alarm.Triggerd = true;
+                Alarm alarm = Alarms.FirstOrDefault(x => x.AlarmTime.TotalSeconds == Math.Floor(DateTime.Now.TimeOfDay.TotalSeconds) && x.Activated /*&& x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)*/);
                 notifier.ShowInformation(alarm.Content);
 
-                Change_Panel("Alarm");
+                Change_Panel("ActiveAlarm");
 
                 //Brings window to front
                 if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
@@ -349,6 +349,20 @@ namespace Digital_Clock
             return (T)Enum.ToObject(typeof(T), number);
         }
 
+        private bool AreAllValidNumericChars(string str)
+        {
+            foreach (char c in str)
+            {
+                if (c != '.')
+                {
+                    if (!Char.IsNumber(c))
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
         #endregion Helper_Methods
 
         public void ToggleAlarm()
@@ -356,6 +370,41 @@ namespace Digital_Clock
             Alarm alarm = (Alarm)Alarm_Listbox.SelectedItem;
             alarm.Activated = !alarm.Activated;
             Alarm_Listbox.Items.Refresh();
+            Alarm_Listbox.SelectedIndex = -1;
+        }
+
+        private void Alarm_txt_ValueChange(object sender, TextChangedEventArgs e)
+        {
+            TextBox txt = (TextBox)sender;
+            if (!AreAllValidNumericChars(txt.Text))
+                txt.Text = "00";
+            txt.CaretIndex = txt.Text.Length;
+        }
+
+        private void Alarm_txt_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox txt = (TextBox)sender;
+            if (txt.Text.Length != 2)
+                txt.Text = "00";
+        }
+
+        private void AddAlarm(object sender, RoutedEventArgs e)
+        {
+            Alarm newAlarm = new Alarm();
+            newAlarm.AlarmTime = new TimeSpan(Convert.ToInt32(Hours_txt.Text), Convert.ToInt32(Minutes_txt.Text), 0);
+            newAlarm.Content = AlarmContent_txt.Text;
+            Alarms.Add(newAlarm);
+            Alarm_Listbox.Items.Refresh();
+            Hours_txt.Text = "00";
+            Minutes_txt.Text = "00";
+            AlarmContent_txt.Text = "";
+        }
+
+        private void CancelAlarm(object sender, RoutedEventArgs e)
+        {
+            Hours_txt.Text = "00";
+            Minutes_txt.Text = "00";
+            AlarmContent_txt.Text = "";
         }
     }
 }

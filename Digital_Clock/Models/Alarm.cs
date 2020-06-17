@@ -8,15 +8,14 @@ namespace Digital_Clock.Models
 {
     internal class Alarm
     {
-        public string _AlarmTime { get { return string.Format("{0:HH:mm}", AlarmTime); } set { } }
-        public DateTime AlarmTime { get; set; } = DateTime.Now;
+        public string _AlarmTime { get { return string.Format("{0}:{1}", AlarmTime.Hours, AlarmTime.Minutes); } set { } }
+        public TimeSpan AlarmTime { get; set; } = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
         public List<WeekDays> DaysToRepeat { get; set; } = new List<WeekDays>();
         public string Content { get; set; } = "Your alarm wants your attention";
-        public bool Triggerd { get; set; } = false;
         public bool Activated { get; set; } = true;
     }
 
-    public enum WeekDays : int
+    public enum WeekDays
     {
         Sunday = 0,
         Monday = 1,

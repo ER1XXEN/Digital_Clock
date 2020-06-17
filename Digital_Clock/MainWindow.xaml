@@ -7,6 +7,62 @@
         mc:Ignorable="d"
         FontFamily="/Resources/#Digital Numbers"
         Title="Tech-Clock" Height="450" Width="800" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <Style TargetType="{x:Type Image}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="#C91D00">
+                            <ContentPresenter TextBlock.Foreground="White" TextBlock.TextAlignment="Center" Margin="0,8,0,0" ></ContentPresenter>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Grid Background="#FF2500">
+                                    <ContentPresenter TextBlock.Foreground="White" TextBlock.TextAlignment="Center" Margin="0,8,0,0" ></ContentPresenter>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid Background="#FF3C3C3C">
         <Canvas x:Name="Body" HorizontalAlignment="Left" Height="420" VerticalAlignment="Top" Width="794" Margin="0,0,-0.4,0">
             <Canvas x:Name="Home_Panel" Height="420" Width="794" d:IsHidden="True">
@@ -38,10 +94,25 @@
                 </ListBox>
                 <Image x:Name="AlarmAdd_img" Height="62" Canvas.Left="670" Canvas.Top="49" Width="63" Source="Resources/plus-button.png" Tag="AddAlarm" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" />
             </Canvas>
-            <Canvas x:Name="AddAlarm_Panel" Height="420" Width="794" Focusable="True">
+            <Canvas x:Name="AddAlarm_Panel" Height="420" Width="794" Focusable="True" d:IsHidden="True">
                 <Image x:Name="AddAlarmClose_img" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Alarm" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" />
-                <TextBox x:Name="CountDown_Index_txt_Copy" Height="71" TextWrapping="Wrap" Text="00:00:00" Width="319" Canvas.Left="236" Canvas.Top="85" FontSize="48" Foreground="White" Background="{x:Null}" BorderBrush="White" SelectionBrush="{x:Null}" BorderThickness="0,0,0,2" LostKeyboardFocus="CountDown_Index_txt_LostKeyboardFocus" GotKeyboardFocus="CountDown_Index_txt_GotFocus" />
-                <Label Content="Time" Canvas.Left="236" Canvas.Top="39" Height="35" Width="73" FontSize="20" Foreground="White" />
+                <Label Content="Time" Canvas.Left="238" Canvas.Top="59" Height="35" Width="73" FontSize="20" Foreground="White" />
+                <Label Content=":" Canvas.Left="320" Canvas.Top="94" Foreground="White" FontSize="48" BorderBrush="White" BorderThickness="0,0,0,2" Height="60" Width="47" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+                <TextBox x:Name="Minutes_txt"  TabIndex="2" Height="60" Canvas.Left="363" TextWrapping="Wrap" Text="00" Canvas.Top="94" Width="84" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="Alarm_txt_LostFocus" TextChanged="Alarm_txt_ValueChange" />
+                <TextBox x:Name="Hours_txt"  TabIndex="1" Height="60" Canvas.Left="237" TextWrapping="Wrap" Text="00" Canvas.Top="94" Width="84" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" TextChanged="Alarm_txt_ValueChange" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="Alarm_txt_LostFocus" />
+                <Label x:Name="Test_lbl" Content="" Canvas.Left="456" Canvas.Top="14" Foreground="White" FontSize="36" />
+                <Label Content="Content" Canvas.Left="238" Canvas.Top="169" Height="35" Width="130" FontSize="20" Foreground="White" />
+                <TextBox x:Name="AlarmContent_txt"  TabIndex="2" Height="60" Canvas.Left="237" TextWrapping="Wrap" Canvas.Top="204" Width="398" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" SelectionBrush="{x:Null}" />
+                <Button x:Name="AddAlarm_btn" Content="Add Alarm" Canvas.Left="238" Canvas.Top="291" Width="179" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" Click="AddAlarm" />
+                <Button x:Name="CancelAlarm_btn" Content="Cancel" Canvas.Left="456" Canvas.Top="291" Width="179" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" Click="CancelAlarm" />
+            </Canvas>
+            <Canvas x:Name="ActiveAlarm_Panel" Height="420" Width="794" Focusable="True">
+                <Image x:Name="AlarmClose_img1" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Home" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" />
+                <Label x:Name="ActiveAlarm_lbl" Content="00:00:00" Canvas.Left="257" Canvas.Top="168" Height="71" Width="318" Foreground="White" FontSize="48" />
+                <Button x:Name="SnoozeAlarm_btn" Content="Snooze" Canvas.Left="218" Canvas.Top="308" Width="180" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" />
+                <Button x:Name="StopAlarm_btn" Content="Stop" Canvas.Left="439" Canvas.Top="308" Width="179" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" />
+                <TextBlock x:Name="ActiveAlarmContent_lbl" Canvas.Left="257" TextWrapping="Wrap" Text="Content Content Content Content Content Content Content Content " Canvas.Top="34" Height="134" Width="318" FontSize="24" Foreground="White" />
+                <Label Content="(10 Min)" Canvas.Left="261" Canvas.Top="348" Foreground="White" />
             </Canvas>
         </Canvas>
     </Grid>
