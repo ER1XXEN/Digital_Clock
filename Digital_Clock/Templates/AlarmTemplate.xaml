@@ -17,6 +17,9 @@
                     <DataTrigger Binding="{Binding Activated}" Value="False">
                         <Setter Property="Source" Value="/Digital_Clock;component/Resources/bell.png" />
                     </DataTrigger>
+                    <DataTrigger Binding="{Binding Snooze}" Value="True">
+                        <Setter Property="Source" Value="/Digital_Clock;component/Resources/bell-snooze.png" />
+                    </DataTrigger>
                 </Style.Triggers>
             </Style>
             <!--<Style TargetType="{x:Type Label}">
@@ -31,7 +34,9 @@
     </UserControl.Resources>
     <Grid x:Name="Body" Margin="0,0,-0.4,0.4">
         <Image x:Name="Bell_Img" HorizontalAlignment="Left" Margin="10,10,0,10"  Style="{StaticResource ImageChecked}" Width="49" MouseLeftButtonUp="Bell_Img_MouseLeftButtonUp" />
+
         <Label x:Name="Alarm_Time_lbl" Content="{Binding _AlarmTime}" HorizontalAlignment="Left" Margin="96,0,-0.4,0" Width="354" FontSize="36" FontWeight="Bold" Foreground="White" Height="45" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" Padding="0" />
+
         <Label Content="Sun" HorizontalAlignment="Left" Margin="96,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Sunday" Visibility="Hidden" />
         <Label Content="Mon" HorizontalAlignment="Left" Margin="142,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Monday" Visibility="Hidden" />
         <Label Content="Tue" HorizontalAlignment="Left" Margin="187,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Tuesday" Visibility="Hidden" />

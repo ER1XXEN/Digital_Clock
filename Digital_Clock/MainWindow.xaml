@@ -6,7 +6,7 @@
         xmlns:Templates="clr-namespace:Digital_Clock.Templates"
         mc:Ignorable="d"
         FontFamily="/Resources/#Digital Numbers"
-        Title="Tech-Clock" Height="450" Width="800" ResizeMode="CanMinimize">
+        Title="Tech-Clock" Height="450" Width="800" ResizeMode="CanMinimize" Icon="Icon.ico">
     <Window.Resources>
         <Style TargetType="{x:Type Image}">
             <Style.Triggers>
@@ -109,10 +109,10 @@
             <Canvas x:Name="ActiveAlarm_Panel" Height="420" Width="794" Focusable="True">
                 <Image x:Name="AlarmClose_img1" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Home" MouseLeftButtonUp="Menu_img_MouseLeftButtonUp" />
                 <Label x:Name="ActiveAlarm_lbl" Content="00:00:00" Canvas.Left="257" Canvas.Top="168" Height="71" Width="318" Foreground="White" FontSize="48" />
-                <Button x:Name="SnoozeAlarm_btn" Content="Snooze" Canvas.Left="218" Canvas.Top="308" Width="180" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" />
-                <Button x:Name="StopAlarm_btn" Content="Stop" Canvas.Left="439" Canvas.Top="308" Width="179" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" />
+                <Button x:Name="SnoozeAlarm_btn" Content="Snooze" Canvas.Left="218" Canvas.Top="308" Width="180" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" Click="SnoozeAlarm" />
+                <Button x:Name="StopAlarm_btn" Content="Stop" Canvas.Left="439" Canvas.Top="308" Width="179" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" Click="StopAlarm" />
                 <TextBlock x:Name="ActiveAlarmContent_lbl" Canvas.Left="257" TextWrapping="Wrap" Text="Content Content Content Content Content Content Content Content " Canvas.Top="34" Height="134" Width="318" FontSize="24" Foreground="White" />
-                <Label Content="(10 Min)" Canvas.Left="261" Canvas.Top="348" Foreground="White" />
+                <Label x:Name="SnoozeTime_lbl" Content="(10 Min)" Canvas.Left="261" Canvas.Top="348" Foreground="White" />
             </Canvas>
         </Canvas>
     </Grid>

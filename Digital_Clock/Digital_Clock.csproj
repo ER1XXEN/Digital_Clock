@@ -99,6 +99,8 @@
     <Resource Include="Resources\alarm-clock.png" />
     <Resource Include="Resources\bell.png" />
     <Resource Include="Resources\bell-selected.png" />
+    <Resource Include="Icon.ico" />
+    <Resource Include="Resources\bell-snooze.png" />
     <Content Include="Resources\minus-button.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

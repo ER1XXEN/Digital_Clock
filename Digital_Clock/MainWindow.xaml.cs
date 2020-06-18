@@ -31,13 +31,16 @@ namespace Digital_Clock
     {
         #region Variables
 
-        private List<Alarm> Alarms = new List<Alarm>();
+        private List<Alarm> Alarms = new List<Alarm>().OrderBy(x => x.AlarmTime).ToList();
 
         private DispatcherTimer TimerClock = new DispatcherTimer();
         private DispatcherTimer TimerStopWatch = new DispatcherTimer();
+        private DispatcherTimer TimerActiveAlarm = new DispatcherTimer();
         private DispatcherTimer TimerCountDown = new DispatcherTimer();
         private DispatcherTimer CountDownClock = new DispatcherTimer();
         private Stopwatch stopWatch = new Stopwatch();
+
+        private Alarm ActiveAlarm = null;
 
         private Notifier notifier = new Notifier(cfg =>
         {
@@ -55,6 +58,7 @@ namespace Digital_Clock
         });
 
         private int TimeLeft = 0;
+        private int snoozeTime = 1;
 
         #endregion Variables
 
@@ -78,6 +82,10 @@ namespace Digital_Clock
             TimerClock.Interval = new TimeSpan(0, 0, 1);
             TimerClock.Start();
 
+            TimerActiveAlarm.Tick += new EventHandler(ActiveAlarmTimer);
+            TimerActiveAlarm.Interval = new TimeSpan(0, 0, 1);
+            TimerActiveAlarm.Start();
+
             TimerStopWatch.Tick += new EventHandler(StopWatchTimer);
             TimerStopWatch.Interval = new TimeSpan(0, 0, 1);
 
@@ -87,14 +95,15 @@ namespace Digital_Clock
             TimerCountDown.Interval = new TimeSpan(0, 0, 1);
 
             Alarm TestAlarm = new Alarm();
-            TestAlarm.Activated = false;
             TestAlarm.AlarmTime = TestAlarm.AlarmTime.Add(new TimeSpan(0, 1, 0));
             TestAlarm.DaysToRepeat.Add(NumToEnum<WeekDays>((int)DateTime.Now.DayOfWeek));
             Alarms.Add(TestAlarm);
             Alarms.Add(new Alarm());
             Alarm_Listbox.ItemsSource = Alarms;
 
-            Change_Panel("ActiveAlarm");
+            SnoozeTime_lbl.Content = string.Format("({0} Min)", snoozeTime);
+
+            Change_Panel("Alarm");
         }
 
         /// <summary>
@@ -112,6 +121,12 @@ namespace Digital_Clock
             }
         }
 
+        private void SetActiveAlarmData()
+        {
+            ActiveAlarmContent_lbl.Text = ActiveAlarm.Content;
+            ActiveAlarm_lbl.Content = ActiveAlarm._AlarmTime;
+        }
+
         #endregion Custom_Methods
 
         #region Control_Methods
@@ -125,12 +140,14 @@ namespace Digital_Clock
         /// <param name="e"></param>
         private void Timer_Click(object sender, EventArgs e)
         {
-            Clock_Index_lbl.Content = string.Format("{0:HH:mm:ss}", DateTime.Now);
+            Clock_Index_lbl.Content = DateTime.Now.ToString("HH':'mm':'ss");
             if (Alarms.Any(x => x.AlarmTime.TotalSeconds == Math.Floor(DateTime.Now.TimeOfDay.TotalSeconds) && x.Activated /*&& x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)*/))
             {
                 Alarm alarm = Alarms.FirstOrDefault(x => x.AlarmTime.TotalSeconds == Math.Floor(DateTime.Now.TimeOfDay.TotalSeconds) && x.Activated /*&& x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)*/);
                 notifier.ShowInformation(alarm.Content);
 
+                ActiveAlarm = alarm;
+                SetActiveAlarmData();
                 Change_Panel("ActiveAlarm");
 
                 //Brings window to front
@@ -147,7 +164,7 @@ namespace Digital_Clock
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StopWatchTimer(object sender, EventArgs e) => StopWatch_Index_lbl.Content = string.Format("{0:00}:{1:00}:{2:00}", stopWatch.Elapsed.Hours, stopWatch.Elapsed.Minutes, stopWatch.Elapsed.Seconds);
+        private void StopWatchTimer(object sender, EventArgs e) => StopWatch_Index_lbl.Content = stopWatch.Elapsed.ToString("HH':'mm':'ss");
 
         /// <summary>
         /// Updates value for countdown
@@ -158,7 +175,18 @@ namespace Digital_Clock
         {
             TimeLeft = TimeLeft - 1;
             TimeSpan t = TimeSpan.FromSeconds(TimeLeft);
-            CountDown_Index_txt.Text = string.Format("{0:00}:{1:00}:{2:00}", t.Hours, t.Minutes, t.Seconds);
+            CountDown_Index_txt.Text = t.ToString("HH':'mm':'ss");
+        }
+
+        /// <summary>
+        /// Remind user of alarm
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ActiveAlarmTimer(object sender, EventArgs e)
+        {
+            if (ActiveAlarm != null)
+                SystemSounds.Beep.Play();
         }
 
         //Countdown is done
@@ -174,7 +202,7 @@ namespace Digital_Clock
 
             TimeLeft = TimeLeft - 1;
             TimeSpan t = TimeSpan.FromSeconds(TimeLeft);
-            CountDown_Index_txt.Text = string.Format("{0:00}:{1:00}:{2:00}", t.Hours, t.Minutes, t.Seconds);
+            CountDown_Index_txt.Text = t.ToString("HH':'mm':'ss");
 
             SystemSounds.Exclamation.Play();
 
@@ -233,7 +261,7 @@ namespace Digital_Clock
             Start_StopWatch_img.Source = new BitmapImage(new Uri(@"Resources\play-button.png", UriKind.Relative));
             stopWatch.Reset();
             TimerStopWatch.Stop();
-            StopWatch_Index_lbl.Content = string.Format("{0:00}:{1:00}:{2:00}", stopWatch.Elapsed.Hours, stopWatch.Elapsed.Minutes, stopWatch.Elapsed.Seconds);
+            StopWatch_Index_lbl.Content = stopWatch.Elapsed.ToString("HH':'mm':'ss");
         }
 
         /// <summary>
@@ -405,6 +433,26 @@ namespace Digital_Clock
             Hours_txt.Text = "00";
             Minutes_txt.Text = "00";
             AlarmContent_txt.Text = "";
+        }
+
+        private void StopAlarm(object sender, RoutedEventArgs e)
+        {
+            ActiveAlarm.AlarmTime = ActiveAlarm.AlarmTime.Subtract(new TimeSpan(0, snoozeTime * ActiveAlarm.SnoozeTime, 0));
+            ActiveAlarm.Snooze = false;
+            ActiveAlarm.SnoozeTime = 0;
+            Alarm_Listbox.Items.Refresh();
+            Change_Panel("Alarm");
+            ActiveAlarm = null;
+        }
+
+        private void SnoozeAlarm(object sender, RoutedEventArgs e)
+        {
+            ActiveAlarm.AlarmTime = ActiveAlarm.AlarmTime.Add(new TimeSpan(0, snoozeTime, 0));
+            ActiveAlarm.Snooze = true;
+            ActiveAlarm.SnoozeTime = ActiveAlarm.SnoozeTime + 1;
+            Alarm_Listbox.Items.Refresh();
+            Change_Panel("Alarm");
+            ActiveAlarm = null;
         }
     }
 }

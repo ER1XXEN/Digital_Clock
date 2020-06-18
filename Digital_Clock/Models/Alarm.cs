@@ -1,18 +1,28 @@
 ﻿using System;
+
 using System.Collections.Generic;
+
 using System.Linq;
+
 using System.Text;
+
 using System.Threading.Tasks;
 
 namespace Digital_Clock.Models
+
 {
     internal class Alarm
+
     {
         public string _AlarmTime { get { return string.Format("{0}:{1}", AlarmTime.Hours, AlarmTime.Minutes); } set { } }
-        public TimeSpan AlarmTime { get; set; } = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
-        public List<WeekDays> DaysToRepeat { get; set; } = new List<WeekDays>();
         public string Content { get; set; } = "Your alarm wants your attention";
         public bool Activated { get; set; } = true;
+
+        public bool Snooze { get; set; } = false;
+        public int SnoozeTime { get; set; } = 0;
+
+        public TimeSpan AlarmTime { get; set; } = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+        public List<WeekDays> DaysToRepeat { get; set; } = new List<WeekDays>();
     }
 
     public enum WeekDays

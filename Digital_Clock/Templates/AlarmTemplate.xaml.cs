@@ -21,13 +21,9 @@ namespace Digital_Clock.Templates
     /// </summary>
     public partial class AlarmTemplate : UserControl
     {
-        public ObservableCollection<int> MyListViewBinding { get; set; }
-
         public AlarmTemplate()
         {
             InitializeComponent();
-
-            MyListViewBinding = new ObservableCollection<int>();
         }
 
         private void Bell_Img_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
