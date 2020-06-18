@@ -103,7 +103,7 @@ namespace Digital_Clock
 
             SnoozeTime_lbl.Content = string.Format("({0} Min)", snoozeTime);
 
-            Change_Panel("Alarm");
+            Change_Panel("Home");
         }
 
         /// <summary>

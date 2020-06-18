@@ -14,7 +14,7 @@ namespace Digital_Clock.Models
     internal class Alarm
 
     {
-        public string _AlarmTime { get { return string.Format("{0}:{1}", AlarmTime.Hours, AlarmTime.Minutes); } set { } }
+        public string _AlarmTime { get { return AlarmTime.ToString("hh':'mm"); } set { } }
         public string Content { get; set; } = "Your alarm wants your attention";
         public bool Activated { get; set; } = true;
 

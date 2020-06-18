@@ -22,27 +22,24 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-            <!--<Style TargetType="{x:Type Label}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding DaysToRepeat.Any(x => (int)x == /Tag)}"
-                    Value="True">
-                        <Setter Property="Button.Background" Value="Red" />
-                        DataTrigger>
-                </Style.Triggers>
-            </Style>-->
+            <Style TargetType="{x:Type Label}">
+                <Setter Property="Label.Foreground" Value="Red" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid x:Name="Body" Margin="0,0,-0.4,0.4">
         <Image x:Name="Bell_Img" HorizontalAlignment="Left" Margin="10,10,0,10"  Style="{StaticResource ImageChecked}" Width="49" MouseLeftButtonUp="Bell_Img_MouseLeftButtonUp" />
 
         <Label x:Name="Alarm_Time_lbl" Content="{Binding _AlarmTime}" HorizontalAlignment="Left" Margin="96,0,-0.4,0" Width="354" FontSize="36" FontWeight="Bold" Foreground="White" Height="45" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" Padding="0" />
+        <Canvas x:Name="WeekDays_Panel" Margin="96,50,44.4,2.6">
 
-        <Label Content="Sun" HorizontalAlignment="Left" Margin="96,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Sunday" Visibility="Hidden" />
-        <Label Content="Mon" HorizontalAlignment="Left" Margin="142,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Monday" Visibility="Hidden" />
-        <Label Content="Tue" HorizontalAlignment="Left" Margin="187,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Tuesday" Visibility="Hidden" />
-        <Label Content="Wed" HorizontalAlignment="Left" Margin="234,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Wednesday" Visibility="Hidden" />
-        <Label Content="Thu" HorizontalAlignment="Left" Margin="282,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Thursday" Visibility="Hidden" />
-        <Label Content="Fri" HorizontalAlignment="Left" Margin="330,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Friday" Visibility="Hidden" />
-        <Label Content="Sat" HorizontalAlignment="Left" Margin="375,50,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" Tag="Saturday" Visibility="Hidden" />
+            <Label Content="Sun" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" FontWeight="Bold" FontSize="14" Tag="0" />
+            <Label Content="Mon" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" FontWeight="Bold" FontSize="14" Tag="1" Canvas.Left="46" />
+            <Label Content="Tue" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" FontWeight="Bold" FontSize="14" Tag="2" Canvas.Left="91" />
+            <Label Content="Wed" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" FontWeight="Bold" FontSize="14" Tag="3" Canvas.Left="138" />
+            <Label Content="Thu" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" FontWeight="Bold" FontSize="14" Tag="4" Canvas.Left="186" />
+            <Label Content="Fri" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" FontWeight="Bold" FontSize="14" Tag="5" Canvas.Left="234" />
+            <Label Content="Sat" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" FontWeight="Bold" FontSize="14" Tag="6" Canvas.Left="279" />
+        </Canvas>
     </Grid>
 </UserControl>
