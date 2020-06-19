@@ -72,12 +72,32 @@
                 <Image x:Name="AlarmImage" Height="100" Canvas.Left="226" Canvas.Top="270" Width="100" Source="Resources/alarm-clock.png" MouseLeftButtonUp="MenuClick" Tag="Alarm" />
             </Canvas>
             <Canvas x:Name="StopWatch_Panel" Height="420" Width="794" d:IsHidden="True">
-                <Label x:Name="StopWatchIndex" Background="{x:Null}" Foreground="White" FontSize="48" FontWeight="Bold" Width="794" Height="420" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="00:00:00" />
+                <Label x:Name="StopWatchIndex" Background="{x:Null}" Foreground="White" FontSize="48" FontWeight="Bold" Width="360" Height="88" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="00:00:00" Canvas.Left="155" Canvas.Top="116" />
                 <Image x:Name="StopWatchCloseImage" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" MouseLeftButtonUp="MenuClick" Tag="Home" />
-                <Image x:Name="StartStopWatchImage" Height="108" Canvas.Left="286" Canvas.Top="263" Width="108" Source="Resources/play-button.png" MouseLeftButtonUp="StartStopWatch" Tag="Start" />
-                <Image x:Name="ResetStopWatchImage" Height="108" Canvas.Left="423" Canvas.Top="263" Width="108" Source="Resources/stop-button.png" Tag="Start" MouseLeftButtonUp="ResetStopWatch" />
+                <Image x:Name="StartStopWatchImage" Height="80" Canvas.Left="178" Canvas.Top="209" Width="80" Source="Resources/play-button.png" MouseLeftButtonUp="StartStopWatch" Tag="Start" />
+                <Image x:Name="ResetStopWatchImage" Height="80" Canvas.Left="413" Canvas.Top="209" Width="80" Source="Resources/stop-button.png" Tag="Start" MouseLeftButtonUp="ResetStopWatch" />
+                <Image x:Name="LapTimeImage" Height="80" Canvas.Left="297" Canvas.Top="209" Width="80" Source="Resources/black-stopwatch.png" MouseLeftButtonUp="LapTime" Tag="StopWatch" />
+                <Label Background="{x:Null}" Foreground="White" FontSize="24" Width="68" Height="46" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Lap's" Canvas.Left="538" Canvas.Top="20" FontFamily="Agency FB" />
+                <ListView x:Name="LapTimeList" Height="354" Canvas.Left="538" Canvas.Top="66" Width="256" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontFamily="Agency FB" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Focusable="False">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Number" DisplayMemberBinding="{Binding Path=Number}" Width="50" />
+                            <GridViewColumn Header="Total Time" DisplayMemberBinding="{Binding Path=TotalTime, StringFormat=hh\\:mm\\:ss}" Width="100" />
+                            <GridViewColumn Header="Time Difference" DisplayMemberBinding="{Binding Path=TimeSinceLast, StringFormat=hh\\:mm\\:ss}" Width="100" />
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <TextBlock Text="{Binding Number}" FontSize="16" />
+                                <TextBlock Text="{Binding TotalTime}" FontSize="16" />
+                                <TextBlock Text="{Binding TimeSinceLast}" FontSize="16" />
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Canvas>
-            <Canvas x:Name="CountDown_Panel" Height="420" Width="794" Focusable="True">
+            <Canvas x:Name="CountDown_Panel" Height="420" Width="794" Focusable="True" d:IsHidden="True">
                 <Image x:Name="CountDownCloseImage" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Home" MouseLeftButtonUp="MenuClick" />
                 <Image x:Name="StartCountDownImage" Height="108" Canvas.Left="286" Canvas.Top="263" Width="108" Source="Resources/play-button.png" MouseLeftButtonUp="StartCountDown" Tag="Start" />
                 <Image x:Name="ResetCountDownImage" Height="108" Canvas.Left="423" Canvas.Top="263" Width="108" Source="Resources/stop-button.png" Tag="Start" MouseLeftButtonUp="ResetCountDown" />
@@ -98,19 +118,29 @@
                 </ListBox>
                 <Image x:Name="AlarmAddImage" Height="62" Canvas.Left="670" Canvas.Top="49" Width="63" Source="Resources/plus-button.png" Tag="AddAlarm" MouseLeftButtonUp="MenuClick" />
             </Canvas>
-            <Canvas x:Name="AddAlarm_Panel" Height="420" Width="794" Focusable="True" d:IsHidden="True">
+            <Canvas x:Name="AddAlarm_Panel" Height="420" Width="794" Focusable="True">
                 <Image x:Name="AddAlarmCloseImage" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Alarm" MouseLeftButtonUp="MenuClick" />
-                <Label Content="Time" Canvas.Left="238" Canvas.Top="59" Height="35" Width="73" FontSize="20" Foreground="White" />
-                <Label Content=":" Canvas.Left="320" Canvas.Top="94" Foreground="White" FontSize="48" BorderBrush="White" BorderThickness="0,0,0,2" Height="60" Width="47" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-                <TextBox x:Name="AddAlarmMinutes"  TabIndex="2" Height="60" Canvas.Left="363" TextWrapping="Wrap" Text="00" Canvas.Top="94" Width="84" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" TextChanged="TextboxValueCheck" />
-                <TextBox x:Name="AddAlarmHours"  TabIndex="1" Height="60" Canvas.Left="237" TextWrapping="Wrap" Text="00" Canvas.Top="94" Width="84" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" TextChanged="TextboxValueCheck" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" />
-                <Label Content="Content" Canvas.Left="238" Canvas.Top="169" Height="35" Width="130" FontSize="20" Foreground="White" />
-                <TextBox x:Name="AddAlarmContent"  TabIndex="2" Height="60" Canvas.Left="237" TextWrapping="Wrap" Canvas.Top="204" Width="398" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" SelectionBrush="{x:Null}" />
-                <Button x:Name="AddAlarmButton" Content="Add Alarm" Canvas.Left="238" Canvas.Top="291" Width="179" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" Click="AddNewAlarm" />
-                <Button x:Name="CancelAddAlarmButton" Content="Cancel" Canvas.Left="456" Canvas.Top="291" Width="179" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" Click="CancelAlarm" />
+                <Label Content="Time" Canvas.Left="237" Canvas.Top="22" Height="35" Width="73" FontSize="20" Foreground="White" />
+                <Label Content=":" Canvas.Left="319" Canvas.Top="57" Foreground="White" FontSize="48" BorderBrush="White" BorderThickness="0,0,0,2" Height="60" Width="47" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+                <TextBox x:Name="AddAlarmMinutes"  TabIndex="2" Height="60" Canvas.Left="362" TextWrapping="Wrap" Text="00" Canvas.Top="57" Width="84" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" TextChanged="TextboxValueCheck" />
+                <TextBox x:Name="AddAlarmHours"  TabIndex="1" Height="60" Canvas.Left="236" TextWrapping="Wrap" Text="00" Canvas.Top="57" Width="84" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" TextChanged="TextboxValueCheck" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" />
+                <Label Content="Content" Canvas.Left="237" Canvas.Top="132" Height="35" Width="130" FontSize="20" Foreground="White" />
+                <TextBox x:Name="AddAlarmContent"  TabIndex="2" Height="60" Canvas.Left="236" TextWrapping="Wrap" Canvas.Top="167" Width="422" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" SelectionBrush="{x:Null}" />
+                <Button x:Name="AddAlarmButton" Content="Add Alarm" Canvas.Left="237" Canvas.Top="341" Width="179" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" Click="AddNewAlarm" />
+                <Button x:Name="CancelAddAlarmButton" Content="Cancel" Canvas.Left="455" Canvas.Top="341" Width="179" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" Click="CancelAlarm" />
+                <Label Content="Days to repeat" Canvas.Left="237" Canvas.Top="238" Height="35" Width="241" FontSize="20" Foreground="White" />
+                <Canvas x:Name="AddAlarmWeekDays_Panel" Height="58" Canvas.Left="236" Canvas.Top="278" Width="441">
+                    <Label Content="Sun" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" FontSize="20" Tag="0" Canvas.Left="8" Foreground="White" MouseLeftButtonUp="ToggleAddAlarmDay" Canvas.Top="10" />
+                    <Label Content="Mon" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" FontSize="20" Tag="1" Canvas.Left="67" Foreground="White" MouseLeftButtonUp="ToggleAddAlarmDay" Canvas.Top="10"  />
+                    <Label Content="Tue" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" FontSize="20" Tag="2" Canvas.Left="126" Foreground="White" MouseLeftButtonUp="ToggleAddAlarmDay" Canvas.Top="10"  />
+                    <Label Content="Wed" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" FontSize="20" Tag="3" Canvas.Left="185" Foreground="White" MouseLeftButtonUp="ToggleAddAlarmDay" Canvas.Top="10"  />
+                    <Label Content="Thu" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" FontSize="20" Tag="4" Canvas.Left="249" Foreground="White" MouseLeftButtonUp="ToggleAddAlarmDay" Canvas.Top="10"  />
+                    <Label Content="Fri" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" FontSize="20" Tag="5" Canvas.Left="308" Foreground="White" MouseLeftButtonUp="ToggleAddAlarmDay" Canvas.Top="10"  />
+                    <Label Content="Sat" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" FontSize="20" Tag="6" Canvas.Left="372" Foreground="White" MouseLeftButtonUp="ToggleAddAlarmDay" Canvas.Top="10"  />
+                </Canvas>
             </Canvas>
-            <Canvas x:Name="ActiveAlarm_Panel" Height="420" Width="794" Focusable="True">
-                <Label x:Name="ActiveAlarm" Content="00:00:00" Canvas.Left="237" Canvas.Top="174" Height="72" Width="314" Foreground="White" FontSize="48" />
+            <Canvas x:Name="ActiveAlarm_Panel" Height="420" Width="794" Focusable="True" d:IsHidden="True">
+                <Label x:Name="ActiveAlarmIndex" Content="00:00:00" Canvas.Left="237" Canvas.Top="174" Height="72" Width="314" Foreground="White" FontSize="48" />
                 <Button x:Name="SnoozeAlarmButton" Content="Snooze" Canvas.Left="218" Canvas.Top="308" Width="180" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" Click="SnoozeAlarm" />
                 <Button x:Name="StopAlarmButton" Content="Stop" Canvas.Left="439" Canvas.Top="308" Width="179" Height="40" FontSize="20" Background="{x:Null}" Foreground="White" BorderThickness="2" BorderBrush="White" Click="StopAlarm" />
                 <TextBlock x:Name="ActiveAlarmContent" Canvas.Left="257" TextWrapping="Wrap" Text="Content Content Content Content Content Content Content Content " Canvas.Top="34" Height="134" Width="318" FontSize="24" Foreground="White" />

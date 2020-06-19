@@ -61,7 +61,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\HelperMethods.cs" />
     <Compile Include="Models\Alarm.cs" />
+    <Compile Include="Models\LapTime.cs" />
     <Compile Include="Templates\AlarmTemplate.xaml.cs">
       <DependentUpon>AlarmTemplate.xaml</DependentUpon>
     </Compile>

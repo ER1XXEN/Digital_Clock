@@ -1,4 +1,5 @@
-﻿using Digital_Clock.Models;
+﻿using Digital_Clock.Helper;
+using Digital_Clock.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,6 +33,7 @@ namespace Digital_Clock
         #region Variables
 
         private List<Alarm> Alarms = new List<Alarm>().OrderBy(x => x.AlarmTime).ToList();
+        private List<LapTime> LapTimes = new List<LapTime>().OrderBy(x => x.Number).ToList();
 
         private DispatcherTimer TimerClock = new DispatcherTimer();
         private DispatcherTimer TimerStopWatch = new DispatcherTimer();
@@ -96,14 +98,16 @@ namespace Digital_Clock
 
             Alarm TestAlarm = new Alarm();
             TestAlarm.AlarmTime = TestAlarm.AlarmTime.Add(new TimeSpan(0, 1, 0));
-            TestAlarm.DaysToRepeat.Add(NumToEnum<WeekDays>((int)DateTime.Now.DayOfWeek));
+            int[] DArr = { 0, 2, 4, 5 };
+            foreach (int item in DArr)
+                TestAlarm.DaysToRepeat.Add(HelperMethods.NumToEnum<WeekDays>(item));
             Alarms.Add(TestAlarm);
             Alarms.Add(new Alarm());
             AlarmListbox.ItemsSource = Alarms;
 
             SnoozeTime.Content = string.Format("({0} Min)", snoozeTime);
 
-            ChangePanel("Home");
+            ChangePanel("AddAlarm");
         }
 
         /// <summary>
@@ -112,7 +116,7 @@ namespace Digital_Clock
         /// <param name="Panel">Panel to switch to</param>
         private void ChangePanel(string Panel)
         {
-            foreach (Canvas item in FindWindowChildren<Canvas>(Body))
+            foreach (Canvas item in HelperMethods.FindWindowChildren<Canvas>(Body))
             {
                 if (item.Name.Split('_')[0] == Panel)
                     item.Visibility = Visibility.Visible;
@@ -127,7 +131,7 @@ namespace Digital_Clock
         private void SetActiveAlarmData()
         {
             ActiveAlarmContent.Text = _ActiveAlarm.Content;
-            ActiveAlarm.Content = _ActiveAlarm._AlarmTime;
+            ActiveAlarmIndex.Content = _ActiveAlarm._AlarmTime;
         }
 
         /// <summary>
@@ -137,6 +141,35 @@ namespace Digital_Clock
         {
             Alarm alarm = (Alarm)AlarmListbox.SelectedItem;
             alarm.Activated = !alarm.Activated;
+            AlarmListbox.Items.Refresh();
+            AlarmListbox.SelectedIndex = -1;
+        }
+
+        /// <summary>
+        /// Update selected alarm after edit
+        /// </summary>
+        /// <param name="Hours"></param>
+        /// <param name="Minutes"></param>
+        public void EditAlarm(string Hours, string Minutes)
+        {
+            Alarm alarm = (Alarm)AlarmListbox.SelectedItem;
+            alarm.AlarmTime = new TimeSpan(Convert.ToInt32(Hours), Convert.ToInt32(Minutes), 0);
+            AlarmListbox.Items.Refresh();
+            AlarmListbox.SelectedIndex = -1;
+        }
+
+        /// <summary>
+        /// Toggle chosen day for selected alarm
+        /// </summary>
+        /// <param name="number"></param>
+        public void ToggleAlarmDays(int number)
+        {
+            Alarm alarm = (Alarm)AlarmListbox.SelectedItem;
+            if (alarm.DaysToRepeat.Any(x => (int)x == number))
+                alarm.DaysToRepeat.Remove(HelperMethods.NumToEnum<WeekDays>(number));
+            else
+                alarm.DaysToRepeat.Add(HelperMethods.NumToEnum<WeekDays>(number));
+            alarm.DaysToRepeat.OrderBy(x=>(int)x);
             AlarmListbox.Items.Refresh();
             AlarmListbox.SelectedIndex = -1;
         }
@@ -155,9 +188,9 @@ namespace Digital_Clock
         private void TimerClick(object sender, EventArgs e)
         {
             ClockIndex.Content = DateTime.Now.ToString("HH':'mm':'ss");
-            if (Alarms.Any(x => x.AlarmTime.TotalSeconds == Math.Floor(DateTime.Now.TimeOfDay.TotalSeconds) && x.Activated /*&& x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)*/))
+            if (Alarms.Any(x => x.AlarmTime.TotalSeconds == Math.Floor(DateTime.Now.TimeOfDay.TotalSeconds) && x.Activated && x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)))
             {
-                Alarm alarm = Alarms.FirstOrDefault(x => x.AlarmTime.TotalSeconds == Math.Floor(DateTime.Now.TimeOfDay.TotalSeconds) && x.Activated /*&& x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek)*/);
+                Alarm alarm = Alarms.FirstOrDefault(x => x.AlarmTime.TotalSeconds == Math.Floor(DateTime.Now.TimeOfDay.TotalSeconds) && x.Activated && x.DaysToRepeat.Any(y => (int)y == (int)DateTime.Now.DayOfWeek));
                 notifier.ShowInformation(alarm.Content);
 
                 _ActiveAlarm = alarm;
@@ -178,7 +211,7 @@ namespace Digital_Clock
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StopWatchTimer(object sender, EventArgs e) => StopWatchIndex.Content = stopWatch.Elapsed.ToString("HH':'mm':'ss");
+        private void StopWatchTimer(object sender, EventArgs e) => StopWatchIndex.Content = stopWatch.Elapsed.ToString("hh':'mm':'ss");
 
         /// <summary>
         /// Updates value for countdown
@@ -201,7 +234,7 @@ namespace Digital_Clock
         /// <param name="e"></param>
         private void ActiveAlarmTimer(object sender, EventArgs e)
         {
-            if (_ActiveAlarm != null)
+            if (ActiveAlarm_Panel.Visibility == Visibility.Visible)
                 SystemSounds.Beep.Play();
         }
 
@@ -283,7 +316,9 @@ namespace Digital_Clock
             StartStopWatchImage.Source = new BitmapImage(new Uri(@"Resources\play-button.png", UriKind.Relative));
             stopWatch.Reset();
             TimerStopWatch.Stop();
-            StopWatchIndex.Content = stopWatch.Elapsed.ToString("HH':'mm':'ss");
+            StopWatchIndex.Content = stopWatch.Elapsed.ToString("hh':'mm':'ss");
+            LapTimes.Clear();
+            LapTimeList.Items.Refresh();
         }
 
         /// <summary>
@@ -337,7 +372,7 @@ namespace Digital_Clock
         private void TextboxValueCheck(object sender, TextChangedEventArgs e)
         {
             TextBox txt = (TextBox)sender;
-            if (!AreAllValidNumericChars(txt.Text))
+            if (!HelperMethods.AreAllValidNumericChars(txt.Text))
             {
                 txt.Text = "00";
                 txt.CaretIndex = txt.Text.Length;
@@ -367,6 +402,9 @@ namespace Digital_Clock
             Alarm newAlarm = new Alarm();
             newAlarm.AlarmTime = new TimeSpan(Convert.ToInt32(AddAlarmHours.Text), Convert.ToInt32(AddAlarmMinutes.Text), 0);
             newAlarm.Content = AddAlarmContent.Text;
+            foreach (Label item in HelperMethods.FindWindowChildren<Label>(AddAlarmWeekDays_Panel))
+                if (item.Foreground == Brushes.Red)
+                    newAlarm.DaysToRepeat.Add(HelperMethods.NumToEnum<WeekDays>(Convert.ToInt32(item.Tag)));
             Alarms.Add(newAlarm);
             AlarmListbox.Items.Refresh();
             AddAlarmHours.Text = "00";
@@ -414,7 +452,7 @@ namespace Digital_Clock
             _ActiveAlarm.SnoozeTime = _ActiveAlarm.SnoozeTime + 1;
             AlarmListbox.Items.Refresh();
             ChangePanel("Alarm");
-            ActiveAlarm = null;
+            _ActiveAlarm = null;
         }
 
         /// <summary>
@@ -433,64 +471,21 @@ namespace Digital_Clock
 
         #endregion ControlMethods
 
-        #region HelperMethods
 
-        /// <summary>
-        /// Get controls of type in children of control
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="dObj"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> FindWindowChildren<T>(DependencyObject dObj) where T : DependencyObject
+        private void LapTime(object sender, MouseButtonEventArgs e)
         {
-            if (dObj != null)
-            {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(dObj); i++)
-                {
-                    DependencyObject ch = VisualTreeHelper.GetChild(dObj, i);
-                    if (ch != null && ch is T)
-                    {
-                        yield return (T)ch;
-                    }
-
-                    foreach (T nestedChild in FindWindowChildren<T>(ch))
-                    {
-                        yield return nestedChild;
-                    }
-                }
-            }
+            LapTimes.Add(new Models.LapTime(LapTimes.Count+1,stopWatch.Elapsed,LapTimes.Count==0?new TimeSpan(0,0,0):LapTimes.ElementAt(LapTimes.Count-1).TotalTime));
+            LapTimeList.ItemsSource = LapTimes;
+            LapTimeList.Items.Refresh();
         }
 
-        /// <summary>
-        /// Convert number to enum of specified type
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="number"></param>
-        /// <returns></returns>
-        public T NumToEnum<T>(int number)
+        private void ToggleAddAlarmDay(object sender, MouseButtonEventArgs e)
         {
-            return (T)Enum.ToObject(typeof(T), number);
+            Label item = (Label)sender;
+            if(item.Foreground == Brushes.White)
+                item.Foreground = Brushes.Red;
+            else
+                item.Foreground = Brushes.White;
         }
-
-        /// <summary>
-        ///  Checks if all character is numeral
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        private bool AreAllValidNumericChars(string str)
-        {
-            foreach (char c in str)
-            {
-                if (c != '.')
-                {
-                    if (!Char.IsNumber(c))
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
-        #endregion HelperMethods
     }
 }
