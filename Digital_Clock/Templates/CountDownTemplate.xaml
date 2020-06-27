@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Digital_Clock.Templates.CountDownTemplate"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Digital_Clock.Templates"
+             mc:Ignorable="d" Height="151.53" Width="288.01" Loaded="UserControl_Loaded">
+    <Grid>
+        <Image x:Name="StartCountDownImage" Source="../Resources/play-button.png" MouseLeftButtonUp="StartCountDown" Tag="Start" Margin="72,85,152,4" />
+        <Image x:Name="ResetCountDownImage" Source="../Resources/stop-button.png" Tag="Start" MouseLeftButtonUp="ResetCountDown" Margin="152,85,72,4" />
+        <TextBox x:Name="CountDownMinutes"  TabIndex="2" TextWrapping="Wrap" Text="00" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" TextChanged="TextboxValueCheck" GotFocus="PauseCountDown" Margin="110,8,77,73" />
+        <TextBox x:Name="CountDownHours"  TabIndex="1" TextWrapping="Wrap" Text="00" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" TextChanged="TextboxValueCheck" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" GotFocus="PauseCountDown" Margin="10,8,169,73" />
+        <TextBox x:Name="CountDownSeconds"  TabIndex="2" TextWrapping="Wrap" Text="00" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" TextChanged="TextboxValueCheck" GotFocus="PauseCountDown" Margin="211,8,-5,73" />
+        <Label Content=":" Foreground="White" FontSize="48" BorderThickness="0,0,0,2" Height="71" Width="40" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="175,3,0,0" />
+        <Label Content=":" Foreground="White" FontSize="48" BorderThickness="0,0,0,2" Height="71" Width="41" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="74,3,0,0" />
+    </Grid>
+</UserControl>

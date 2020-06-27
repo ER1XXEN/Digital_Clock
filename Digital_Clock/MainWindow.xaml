@@ -65,11 +65,11 @@
     </Window.Resources>
     <Grid Background="#FF3C3C3C">
         <Canvas x:Name="Body" HorizontalAlignment="Left" Height="420" VerticalAlignment="Top" Width="794" Margin="0,0,-0.4,0">
-            <Canvas x:Name="Home_Panel" Height="420" Width="794" d:IsHidden="True">
-                <Label x:Name="ClockIndex" Background="{x:Null}" Foreground="White" FontSize="48" FontWeight="Bold" Width="794" Height="420" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                <Image x:Name="StopWatchImage" Height="100" Canvas.Left="466" Canvas.Top="270" Width="100" Source="Resources/black-stopwatch.png" MouseLeftButtonUp="MenuClick" Tag="StopWatch" />
-                <Image x:Name="CountDownImage" Height="87" Canvas.Left="352" Canvas.Top="283" Width="88" Source="Resources/countdown.png" MouseLeftButtonUp="MenuClick" Tag="CountDown" />
-                <Image x:Name="AlarmImage" Height="100" Canvas.Left="226" Canvas.Top="270" Width="100" Source="Resources/alarm-clock.png" MouseLeftButtonUp="MenuClick" Tag="Alarm" />
+            <Canvas x:Name="Home_Panel" Height="420" Width="794">
+                <Templates:ClockTemplate Height="301" Width="303" Canvas.Left="252" Canvas.Top="10" />
+                <Image x:Name="StopWatchImage" Height="100" Canvas.Left="472" Canvas.Top="311" Width="100" Source="Resources/black-stopwatch.png" MouseLeftButtonUp="MenuClick" Tag="StopWatch" />
+                <Image x:Name="CountDownImage" Height="87" Canvas.Left="358" Canvas.Top="324" Width="88" Source="Resources/countdown.png" MouseLeftButtonUp="MenuClick" Tag="CountDown" />
+                <Image x:Name="AlarmImage" Height="100" Canvas.Left="232" Canvas.Top="311" Width="100" Source="Resources/alarm-clock.png" MouseLeftButtonUp="MenuClick" Tag="Alarm" />
             </Canvas>
             <Canvas x:Name="StopWatch_Panel" Height="420" Width="794" d:IsHidden="True">
                 <Label x:Name="StopWatchIndex" Background="{x:Null}" Foreground="White" FontSize="48" FontWeight="Bold" Width="360" Height="88" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="00:00:00" Canvas.Left="155" Canvas.Top="116" />
@@ -99,13 +99,14 @@
             </Canvas>
             <Canvas x:Name="CountDown_Panel" Height="420" Width="794" Focusable="True" d:IsHidden="True">
                 <Image x:Name="CountDownCloseImage" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Home" MouseLeftButtonUp="MenuClick" />
-                <Image x:Name="StartCountDownImage" Height="108" Canvas.Left="286" Canvas.Top="263" Width="108" Source="Resources/play-button.png" MouseLeftButtonUp="StartCountDown" Tag="Start" />
-                <Image x:Name="ResetCountDownImage" Height="108" Canvas.Left="423" Canvas.Top="263" Width="108" Source="Resources/stop-button.png" Tag="Start" MouseLeftButtonUp="ResetCountDown" />
-                <TextBox x:Name="CountDownMinutes"  TabIndex="2" Height="71" Canvas.Left="356" TextWrapping="Wrap" Text="00" Canvas.Top="179" Width="118" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" TextChanged="TextboxValueCheck" GotFocus="PauseCountDown" />
-                <TextBox x:Name="CountDownHours"  TabIndex="1" Height="71" Canvas.Left="239" TextWrapping="Wrap" Text="00" Canvas.Top="179" Width="127" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" TextChanged="TextboxValueCheck" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" GotFocus="PauseCountDown" />
-                <TextBox x:Name="CountDownSeconds"  TabIndex="2" Height="71" Canvas.Left="474" TextWrapping="Wrap" Text="00" Canvas.Top="179" Width="83" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="48" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" TextChanged="TextboxValueCheck" GotFocus="PauseCountDown" />
-                <Label Content=":" Canvas.Left="431" Canvas.Top="174" Foreground="White" FontSize="48" BorderThickness="0,0,0,2" Height="71" Width="47" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-                <Label Content=":" Canvas.Left="314" Canvas.Top="174" Foreground="White" FontSize="48" BorderThickness="0,0,0,2" Height="71" Width="47" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+                <ListBox x:Name="CountDownListbox" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="391" Canvas.Left="274" Canvas.Top="10" Width="320" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Templates:CountDownTemplate />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Image x:Name="CountDownAddImage" Height="62" Canvas.Left="670" Canvas.Top="49" Width="63" Source="Resources/plus-button.png" MouseLeftButtonUp="AddCountDown" />
             </Canvas>
             <Canvas x:Name="Alarm_Panel" Height="420" Width="794" Focusable="True" d:IsHidden="True">
                 <Image x:Name="AlarmCloseImage" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Home" MouseLeftButtonUp="MenuClick" />
@@ -118,7 +119,7 @@
                 </ListBox>
                 <Image x:Name="AlarmAddImage" Height="62" Canvas.Left="670" Canvas.Top="49" Width="63" Source="Resources/plus-button.png" Tag="AddAlarm" MouseLeftButtonUp="MenuClick" />
             </Canvas>
-            <Canvas x:Name="AddAlarm_Panel" Height="420" Width="794" Focusable="True">
+            <Canvas x:Name="AddAlarm_Panel" Height="420" Width="794" Focusable="True" d:IsHidden="True">
                 <Image x:Name="AddAlarmCloseImage" Height="36" Canvas.Left="10" Canvas.Top="10" Width="36" Source="Resources/close-button.png" Tag="Alarm" MouseLeftButtonUp="MenuClick" />
                 <Label Content="Time" Canvas.Left="237" Canvas.Top="22" Height="35" Width="73" FontSize="20" Foreground="White" />
                 <Label Content=":" Canvas.Left="319" Canvas.Top="57" Foreground="White" FontSize="48" BorderBrush="White" BorderThickness="0,0,0,2" Height="60" Width="47" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />

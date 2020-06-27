@@ -35,13 +35,13 @@
     <Grid x:Name="Body" Margin="0,0,-0.4,0.4">
         <Image x:Name="Bell_Img" HorizontalAlignment="Left" Margin="10,10,0,10"  Style="{StaticResource ImageChecked}" Width="49" MouseLeftButtonUp="ToggleAlarm" />
 
-        <Label x:Name="Alarm_Time_lbl" Content="{Binding _AlarmTime}" HorizontalAlignment="Left" Margin="96,0,0,0" Width="170" FontSize="36" FontWeight="Bold" Foreground="White" Height="45" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" Padding="0" MouseLeftButtonUp="EditAlarm" />
+        <Label x:Name="Alarm_Time_lbl" HorizontalAlignment="Left" Margin="96,0,0,0" Width="170" FontSize="36" FontWeight="Bold" Foreground="White" Height="45" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" Padding="0" MouseLeftButtonUp="EditAlarm" />
         <Canvas x:Name="EditAlarm_Panel" HorizontalAlignment="Left" Height="50" Margin="96,0,0,0" VerticalAlignment="Top" Width="242" Visibility="Hidden" MouseLeave="EditAlarm_Panel_MouseLeave">
             <Label Content=":" Foreground="White" FontSize="36" BorderThickness="0,0,0,2" Height="60" Width="47" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Canvas.Left="50" Canvas.Top="-6" FontFamily="/Digital_Clock;component/Resources/#Digital Numbers" />
             <TextBox x:Name="EditAlarmMinutes"  TabIndex="2" TextWrapping="Wrap" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="36" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" TextChanged="TextboxValueCheck" Height="50" Canvas.Left="87" Width="70" FontFamily="/Digital_Clock;component/Resources/#Digital Numbers" />
             <TextBox x:Name="EditAlarmHours" TabIndex="1" TextWrapping="Wrap" BorderThickness="0,0,0,2" BorderBrush="White" Background="{x:Null}" Foreground="White" FontSize="36" TextChanged="TextboxValueCheck" SelectionBrush="{x:Null}" MaxLength="2" LostFocus="TextboxLostFocus" Height="50" Width="88" FontFamily="/Digital_Clock;component/Resources/#Digital Numbers" Canvas.Left="-1" />
         </Canvas>
-        <Canvas x:Name="WeekDays_Panel" Margin="96,50,44.4,2.6">
+        <Canvas x:Name="WeekDays_Panel" Margin="96,51,39.4,-3.4">
             <Label Content="Sun" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" FontSize="14" Tag="0" Foreground="White" MouseLeftButtonUp="ToggleDay" />
             <Label Content="Mon" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" FontSize="14" Tag="1" Canvas.Left="46" Foreground="White" MouseLeftButtonUp="ToggleDay"  />
             <Label Content="Tue" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" FontSize="14" Tag="2" Canvas.Left="91" Foreground="White" MouseLeftButtonUp="ToggleDay"  />

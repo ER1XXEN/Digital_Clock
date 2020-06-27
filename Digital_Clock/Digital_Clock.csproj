@@ -63,9 +63,16 @@
     </ApplicationDefinition>
     <Compile Include="Helper\HelperMethods.cs" />
     <Compile Include="Models\Alarm.cs" />
+    <Compile Include="Models\AlarmWithMethods.cs" />
     <Compile Include="Models\LapTime.cs" />
     <Compile Include="Templates\AlarmTemplate.xaml.cs">
       <DependentUpon>AlarmTemplate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\ClockTemplate.xaml.cs">
+      <DependentUpon>ClockTemplate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\CountDownTemplate.xaml.cs">
+      <DependentUpon>CountDownTemplate.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -80,6 +87,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Templates\AlarmTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\ClockTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\CountDownTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

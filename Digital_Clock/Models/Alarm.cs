@@ -14,13 +14,10 @@ namespace Digital_Clock.Models
     internal class Alarm
 
     {
-        public string _AlarmTime { get { return AlarmTime.ToString("hh':'mm"); } set { } }
         public string Content { get; set; } = "Your alarm wants your attention";
         public bool Activated { get; set; } = true;
-
         public bool Snooze { get; set; } = false;
-        public int SnoozeTime { get; set; } = 0;
-
+        public int SnoozeAmount { get; set; } = 0;
         public TimeSpan AlarmTime { get; set; } = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
         public List<WeekDays> DaysToRepeat { get; set; } = new List<WeekDays>();
     }
